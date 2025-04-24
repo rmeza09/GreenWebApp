@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import "./styles.css";
 
-import { Analytics } from "@vercel/analytics/react"
+//import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const [activeSection, setActiveSection] = useState("resume");
@@ -19,7 +19,7 @@ function App() {
     <div>
       <Navbar setActiveSection={setActiveSection} />
 
-      <div id="main-content">
+      {/* <div id="main-content">
         <Section id="resume" isActive={activeSection === "resume"}>
           <Profile />
         </Section>
@@ -36,9 +36,9 @@ function App() {
         <Section id="contact" isActive={activeSection === "contact"}>
           <Contact />
         </Section>
-      </div>
+      </div> */}
       
-      <Analytics />
+      {/* <Analytics /> */}
 
     </div>
   );
