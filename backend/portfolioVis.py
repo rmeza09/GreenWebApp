@@ -25,10 +25,21 @@ def get_stock_data(symbol="AAPL", days=30):
     )
 
     bars = client.get_stock_bars(request_params)
-    df = bars.df.xs(symbol, level=1)
-    df.reset_index(inplace=True)
+
+    if bars.df.empty:
+        raise ValueError(f"No data returned for symbol: {symbol}")
+
+    df = bars.df
+
+    if isinstance(df.index, pd.MultiIndex):
+        if symbol not in df.index.get_level_values(1):
+            raise ValueError(f"Symbol '{symbol}' not found in MultiIndex.")
+        df = df.xs(symbol, level=1)
+
+    df = df.reset_index()
     df = df[["timestamp", "close"]].rename(columns={"timestamp": "Date", "close": "Close"})
     return df
+
 
 def run_model(data):
     symbol = data.get("symbol", "AAPL")
