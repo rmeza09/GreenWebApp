@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
-import "../styles.css";
+import "./styles/globals.css"
+
 
 function MobileNavbar({ setActiveSection }) {
   const [menuOpen, setMenuOpen] = useState(false);

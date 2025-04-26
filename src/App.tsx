@@ -3,7 +3,8 @@ import Navbar from "./components/Navbar"
 import Portfolio from "./components/Portfolio"
 
 import "@fortawesome/fontawesome-free/css/all.min.css"
-import "./styles.css"
+import "./styles/globals.css"
+
 
 //import { Analytics } from "@vercel/analytics/react"
 
@@ -32,7 +33,7 @@ function App() {
 
   return (
     <div>
-      <Navbar setActiveSection={setActiveSection} />
+      {/* <Navbar setActiveSection={setActiveSection} /> */}
 
       <div style={{ padding: "6rem" }}>
         <h2>Backend Test</h2>

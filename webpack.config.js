@@ -19,8 +19,8 @@ module.exports = {
         
       },
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader", "postcss-loader"],
+        test: /\.css$/i,
+      use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg)$/i,  // Match image file extensions
@@ -38,14 +38,12 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
-      {
-        test: /\.css$/,                 // You already likely have this
-        use: ["style-loader", "css-loader"],
-        exclude: /node_modules/,
-      }
     ],
   },
   resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
     extensions: [".tsx", ".ts", ".js"], // Add .ts and .tsx to the list of resolvable extensions
   },
   plugins: [

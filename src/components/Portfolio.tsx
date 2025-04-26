@@ -1,5 +1,6 @@
 
-import "../styles.css";
+import "../styles/globals.css"
+
 "use client"
 
 import React from "react"
