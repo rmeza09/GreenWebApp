@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DesktopNavbar from "./DesktopNavbar";
 import MobileNavbar from "./MobileNavbar";
 import "../styles.css";
-import Logo from "../assets/Green Machine.png"; // Import the logo
+import Logo from "../assets/GreenMachine.png"; // Import the logo
 
 function Navbar({ setActiveSection }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
