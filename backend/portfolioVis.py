@@ -53,6 +53,6 @@ def run_model(data):
     # Dummy model — return close prices for now
     result = {
         "dates": df["Date"].astype(str).tolist(),
-        "predictions": df["Close"].round(2).tolist()
+        "close": df["Close"].round(2).tolist()
     }
     return result

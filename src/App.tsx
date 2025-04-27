@@ -10,7 +10,7 @@ import "./styles/globals.css"
 
 function App() {
   const [activeSection, setActiveSection] = useState<string>("resume")
-  const [data, setData] = useState<{ dates: string[]; predictions: number[] } | null>(null)
+  const [data, setData] = useState<{ dates: string[]; close: number[] } | null>(null)
 
   useEffect(() => {
     console.log("Starting fetch call...")
@@ -33,16 +33,16 @@ function App() {
 
   return (
     <div>
-      {/* <Navbar setActiveSection={setActiveSection} /> */}
+      <Navbar setActiveSection={setActiveSection} />
 
-      <div style={{ padding: "6rem" }}>
+      {/* <div style={{ padding: "6rem" }}>
         <h2>Backend Test</h2>
         {data ? (
           <pre>{JSON.stringify(data, null, 2)}</pre>
         ) : (
           <p>Loading data from backend...</p>
         )}
-      </div>
+      </div> */}
 
       {data && <Portfolio data={data} />}  {/* ✅ Pass `data` into Portfolio properly */}
     </div>

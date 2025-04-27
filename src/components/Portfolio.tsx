@@ -1,83 +1,86 @@
-
 import "../styles/globals.css"
 
 "use client"
 
 import React from "react"
-import { LineChart, Line, CartesianGrid, XAxis } from "recharts"
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts"
 
-import { Card, CardContent, CardHeader, CardTitle , CardDescription} from "../components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card"
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
 } from "../components/ui/chart";
 
-
 export default function Portfolio({ data }) {
-  // Handle case where data isn't loaded yet
   const chartData = data?.dates?.map((date, index) => ({
-    date: new Date(date).toISOString().slice(0, 10), 
-    price: data.predictions[index],
-  })) || []
+    date: new Date(date).toISOString().slice(0, 10),
+    price: data.close[index],
+  })) || [];
 
   const chartConfig = {
-
     price: {
-      label: "Predicted Price",
-      color: "hsl(var(--chart-1))",
+      label: "Close Price",
+      color: "#E16036",
     },
-  }
+  };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Portfolio Prediction</CardTitle>
-          <CardDescription>Model output for AAPL</CardDescription>
-        </div>
-      </CardHeader>
-      <CardContent className="px-2 sm:p-6">
-        <ChartContainer config={chartConfig} className="h-[250px] w-full">
-          <LineChart data={chartData} margin={{ left: 12, right: 12 }}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickFormatter={(value) =>
-                new Date(value).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
-              }
-              tickMargin={8}
-              minTickGap={32}
-              tickLine={false}
-              axisLine={false}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  nameKey="price"
-                  labelFormatter={(value) =>
-                    new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                  }
-                />
-              }
-            />
-            <Line
-              dataKey="price"
-              type="monotone"
-              stroke="var(--color-price)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  )
+    <div className="flex flex-col items-center justify-center w-full p-4 mt-36">
+      <Card className="w-[80vw] max-w-5xl shadow-md">
+        <CardHeader className="border-b p-6 text-center">
+          <CardTitle className="text-2xl font-semibold mb-2">Portfolio Prediction</CardTitle>
+          <CardDescription className="text-base">Model output for AAPL</CardDescription>
+        </CardHeader>
+        <CardContent className="p-6">
+          <ChartContainer config={chartConfig} className="items-center justify-center h-[300px] w-[80vw]">
+            <LineChart data={chartData} margin={{ left: 12, right: 12 }}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickFormatter={(value) =>
+                  new Date(value).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }
+                tickMargin={8}
+                minTickGap={32}
+                tickLine={false}
+                axisLine={false}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    nameKey="price"
+                    labelFormatter={(value) =>
+                      new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    }
+                  />
+                }
+              />
+              <Line
+                dataKey="price"
+                type="linear"
+                stroke="#E16036"
+                strokeWidth={2}
+                dot={false}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                domain={['dataMin - 5', 'dataMax + 5']}
+              />
+
+            </LineChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
