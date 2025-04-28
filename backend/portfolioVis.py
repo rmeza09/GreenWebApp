@@ -13,7 +13,7 @@ API_KEY = os.getenv("ALPACA_API_KEY")
 API_SECRET = os.getenv("ALPACA_SECRET_KEY")
 client = StockHistoricalDataClient(API_KEY, API_SECRET)
 
-def get_stock_data(symbol="AAPL", days=30):
+def get_stock_data(symbol="AAPL", days=365):
     end_date = datetime.now()
     start_date = end_date - timedelta(days=days)
 
@@ -56,3 +56,36 @@ def run_model(data):
         "close": df["Close"].round(2).tolist()
     }
     return result
+
+def get_portfolio_data(days=30):
+    myAssets = ["AMZN", "META", "GOOGL", "AMD", "NKE", "UBER", "COST", "JPM", "CRM", "TXRH"]
+    shareCount = [15, 4.73, 14.43, 25.21, 30.16, 20, 1.25, 4.84, 4.36, 5.68]
+
+    end_date = datetime.today()
+    start_date = end_date - timedelta(days=days)  # 1 year of daily prices
+
+    request = StockBarsRequest(
+        symbol_or_symbols=myAssets,
+        timeframe=TimeFrame.Day,
+        start=start_date,
+        end=end_date
+    )
+
+    bars = client.get_stock_bars(request).df
+
+    # Get the last row (most recent date) per asset
+    latest_closes = bars['close'].groupby(level=0).last()
+    prices = latest_closes.to_dict()
+
+    # Calculate the value of each position
+    position_values = [shareCount[i] * prices[symbol] for i, symbol in enumerate(myAssets)]
+
+    # Create a DataFrame for visualization
+    Assetsdf = pd.DataFrame({
+        "Symbol": myAssets,
+        "Shares": shareCount,
+        "Price": [prices[symbol] for symbol in myAssets],
+        "Value": position_values
+    })
+    
+    return Assetsdf

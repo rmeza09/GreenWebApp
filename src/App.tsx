@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import Navbar from "./components/Navbar"
-import Portfolio from "./components/StockChart"
+import StockChart from "./components/StockChart"
+import { PortfolioPie } from "./components/PortfolioPie";
+
 
 import "@fortawesome/fontawesome-free/css/all.min.css"
 import "./styles/globals.css"
@@ -36,7 +38,11 @@ function App() {
       <Navbar setActiveSection={setActiveSection} />
       
       <div className="pt-[100px]">
-        {data && <Portfolio data={data} />}
+        {data && <StockChart data={data} />}
+      </div>
+
+      <div className="pt-[20px]">
+        <PortfolioPie />
       </div>
     </div>
 

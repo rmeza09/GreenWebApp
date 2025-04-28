@@ -27,10 +27,10 @@ export default function Portfolio({ data }) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full p-4 mt-36">
-      <Card className="w-[80vw] max-w-5xl shadow-md">
+      <Card className="w-[80vw] max-w-5xl shadow-md font-['Roboto']">
         <CardHeader className="border-b p-6 text-center">
-          <CardTitle className="text-2xl font-semibold mb-2">Portfolio Prediction</CardTitle>
-          <CardDescription className="text-base">Model output for AAPL</CardDescription>
+          <CardTitle className="text-2xl font-semibold mb-2 font-['Roboto']">Portfolio Prediction</CardTitle>
+          <CardDescription className="text-base font-['Roboto']">Model output for AAPL</CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <ChartContainer config={chartConfig} className="items-center justify-center h-[300px] w-[80vw]">
@@ -48,6 +48,7 @@ export default function Portfolio({ data }) {
                 minTickGap={32}
                 tickLine={false}
                 axisLine={false}
+                className="font-['Roboto']"
               />
               <ChartTooltip
                 content={
@@ -75,6 +76,7 @@ export default function Portfolio({ data }) {
                 axisLine={false}
                 tickMargin={8}
                 domain={['dataMin - 5', 'dataMax + 5']}
+                className="font-['Roboto']"
               />
 
             </LineChart>

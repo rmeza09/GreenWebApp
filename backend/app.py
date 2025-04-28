@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from portfolioVis import run_model  # Make sure this exists
+from portfolioVis import run_model, get_portfolio_data  # Make sure this exists
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
@@ -10,6 +10,12 @@ def predict():
     input_data = request.get_json()
     result = run_model(input_data)
     return jsonify(result)
+
+@app.route("/api/portfolio", methods=["GET"])
+def portfolio():
+    df = get_portfolio_data()
+    data = df.to_dict(orient="records")
+    return jsonify(data)
 
 @app.route('/')  # Optional: just for sanity check
 def home():
