@@ -32,20 +32,14 @@ function App() {
   }, [])
 
   return (
-    <div>
+    <div className="w-full overflow-x-hidden">
       <Navbar setActiveSection={setActiveSection} />
-
-      {/* <div style={{ padding: "6rem" }}>
-        <h2>Backend Test</h2>
-        {data ? (
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-        ) : (
-          <p>Loading data from backend...</p>
-        )}
-      </div> */}
-
-      {data && <Portfolio data={data} />}  {/* ✅ Pass `data` into Portfolio properly */}
+      
+      <div className="pt-[100px]">
+        {data && <Portfolio data={data} />}
+      </div>
     </div>
+
   )
 }
 

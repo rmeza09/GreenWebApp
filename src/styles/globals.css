@@ -123,3 +123,8 @@
   }
 }
 
+/* globals.css */
+body, html, #__next {
+  margin: 0;
+  padding: 0;
+}
