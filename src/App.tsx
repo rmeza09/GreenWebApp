@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Navbar from "./components/Navbar"
-import Portfolio from "./components/Portfolio"
+import Portfolio from "./components/StockChart"
 
 import "@fortawesome/fontawesome-free/css/all.min.css"
 import "./styles/globals.css"

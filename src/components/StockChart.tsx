@@ -5,12 +5,12 @@ import "../styles/globals.css"
 import React from "react"
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts"
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card"
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../components/ui/chart";
+} from "./ui/chart";
 
 export default function Portfolio({ data }) {
   const chartData = data?.dates?.map((date, index) => ({
