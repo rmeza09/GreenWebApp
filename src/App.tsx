@@ -15,23 +15,20 @@ function App() {
   const [data, setData] = useState<{ dates: string[]; close: number[] } | null>(null)
 
   useEffect(() => {
-    console.log("Starting fetch call...")
-
-    fetch("http://localhost:5000/api/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ symbol: "AAPL" }),
-    })
+    console.log("Starting fetch call for portfolio timeseries...");
+  
+    fetch("http://localhost:5000/api/portfolio_timeseries")
       .then((res) => {
         console.log("Response status:", res.status)
         return res.json()
       })
       .then((result) => {
-        console.log("Backend result:", result)
+        console.log("Backend portfolio timeseries result:", result)
         setData(result)
       })
-      .catch((err) => console.error("Fetch error:", err))
-  }, [])
+      .catch((err) => console.error("Fetch error:", err));
+  }, []);
+  
 
   return (
     <div className="w-full overflow-x-hidden">

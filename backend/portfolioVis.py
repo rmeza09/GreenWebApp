@@ -89,3 +89,40 @@ def get_portfolio_data(days=30):
     })
     
     return Assetsdf
+
+
+def get_portfolio_timeseries(days=30):
+    myAssets = ["SPY", "AMZN", "META", "GOOGL", "AMD", "NKE", "UBER", "COST", "JPM", "CRM", "TXRH"]
+    
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=days)
+
+    request = StockBarsRequest(
+        symbol_or_symbols=myAssets,
+        timeframe=TimeFrame.Day,
+        start=start_date,
+        end=end_date
+    )
+
+    bars = client.get_stock_bars(request).df
+
+    if bars.empty:
+        raise ValueError("No stock data returned")
+
+    timeseries = {}
+    dates = sorted(list(set(bars.index.get_level_values(1).date)))
+
+    for symbol in myAssets:
+        symbol_data = bars.xs(symbol, level=0)
+        symbol_data = symbol_data.reset_index()
+        closes = symbol_data["close"].tolist()
+
+        # Normalize to 1.0
+        normalized = [price / closes[0] for price in closes]
+
+        timeseries[symbol] = normalized
+
+    return {
+        "dates": [str(date) for date in dates],
+        "series": timeseries
+    }
