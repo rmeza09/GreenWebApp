@@ -24,11 +24,14 @@ interface PortfolioItem {
   Value: number;
 }
 
-// Define your color palette
+// Define your color palette and assets array to match StockChart
 const COLORS = [
+  "#000000",  // SPY will be black (though not used in pie)
   "#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1",
   "#a4de6c", "#d0ed57", "#fa8072", "#b0e0e6", "#ffbb28"
 ];
+
+const myAssets = ["SPY", "AMZN", "META", "GOOGL", "AMD", "NKE", "UBER", "COST", "JPM", "CRM", "TXRH"];
 
 export function PortfolioPie() {
   const [portfolioData, setPortfolioData] = useState<PortfolioItem[]>([]);
@@ -37,7 +40,9 @@ export function PortfolioPie() {
     fetch("http://localhost:5000/api/portfolio")
       .then((res) => res.json())
       .then((data) => {
-        setPortfolioData(data);
+        // Filter out SPY from the portfolio data
+        const filteredData = data.filter(item => item.Symbol !== "SPY");
+        setPortfolioData(filteredData);
       })
       .catch((err) => console.error("Error fetching portfolio data:", err));
   }, []);
@@ -111,9 +116,16 @@ export function PortfolioPie() {
                   );
                 }}
               >
-                {portfolioData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
+                {portfolioData.map((entry) => {
+                  // Get the index from myAssets to ensure consistent coloring
+                  const assetIndex = myAssets.indexOf(entry.Symbol);
+                  return (
+                    <Cell 
+                      key={`cell-${entry.Symbol}`} 
+                      fill={COLORS[assetIndex]} 
+                    />
+                  );
+                })}
               </Pie>
             </PieChart>
           </ChartContainer>

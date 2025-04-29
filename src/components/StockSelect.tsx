@@ -16,7 +16,6 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -36,86 +35,135 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const data: Stock[] = [
-    { symbol: "AMZN", close: 123.45, percentGain: 5.67 },
-    { symbol: "META", close: 250.12, percentGain: 2.13 },
-    { symbol: "GOOGL", close: 110.76, percentGain: -3.45 },
-  ]
-  
+const COLORS = [
+  "#000000",  // SPY will be black
+  "#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1",
+  "#a4de6c", "#d0ed57", "#fa8072", "#b0e0e6", "#ffbb28"
+];
 
 export type Stock = {
-    symbol: string
-    close: number
-    percentGain: number
-  }
-  
+  symbol: string
+  close: number
+  percentGain: number
+  color: string
+}
 
 export const columns: ColumnDef<Stock>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-            checked={
-                table.getIsAllPageRowsSelected()
-                ? true
-                : table.getIsSomePageRowsSelected()
-                    ? "indeterminate"
-                    : false
-            }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  {
+    id: "select",
+    header: ({ table }) => (
+      <div className="flex items-center justify-center w-full h-full">
+        <input
+            type="checkbox"
+            checked={table.getIsAllPageRowsSelected()}
+            onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
             aria-label="Select all"
-            className="h-5 w-5"
+            className="w-8 h-8 cursor-pointer accent-primary scale-150"
         />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center w-full h-full">
+          <input
+              type="checkbox"
+              checked={row.getIsSelected()}
+              onChange={(e) => row.toggleSelected(!!e.target.checked)}
+              aria-label={`Select row ${row.index}`}
+              className="w-8 h-8 cursor-pointer accent-primary scale-150"
+          />
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "symbol",
+    header: "Symbol",
+    cell: ({ row }) => <div className="uppercase">{row.getValue("symbol")}</div>,
+  },
+  {
+    accessorKey: "close",
+    header: "Close Price",
+    cell: ({ row }) => {
+      const close = parseFloat(row.getValue("close"))
+      return `$${close.toFixed(2)}`
+    },
+  },
+  {
+    accessorKey: "percentGain",
+    header: "Gain (%)",
+    cell: ({ row }) => {
+      const gain = parseFloat(row.getValue("percentGain"))
+      return `${gain.toFixed(2)}%`
+    },
+  },
+  {
+    accessorKey: "color",
+    header: "",
+    cell: ({ row }) => {
+      const color = row.original.color
+      return (
+        <div
+          className="h-4 w-4 rounded-full mx-auto"
+          style={{ backgroundColor: color }}
+        />
+      )
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+]
 
-      ),
-      cell: ({ row }) => (
-        <div className="flex justify-center items-center p-2">
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                className="h-5 w-5" // <-- Makes checkbox bigger
-            />
-        </div>
+interface StockSelectProps {
+  onStockSelection: (selectedSymbols: string[]) => void;
+  selectedStocks: string[];
+}
 
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "symbol",
-      header: "Symbol",
-      cell: ({ row }) => <div className="uppercase">{row.getValue("symbol")}</div>,
-    },
-    {
-      accessorKey: "close",
-      header: "Close Price",
-      cell: ({ row }) => {
-        const close = parseFloat(row.getValue("close"))
-        return `$${close.toFixed(2)}`
-      },
-    },
-    {
-      accessorKey: "percentGain",
-      header: "Gain (%)",
-      cell: ({ row }) => {
-        const gain = parseFloat(row.getValue("percentGain"))
-        return `${gain.toFixed(2)}%`
-      },
-    },
-  ]
-  
-
-export function StockSelect() {
+export function StockSelect({ onStockSelection, selectedStocks }: StockSelectProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [stocks, setStocks] = React.useState<Stock[]>([])
+
+  // Convert selectedStocks to row selection state
+  const rowSelection = React.useMemo(() => {
+    return stocks.reduce((acc, stock, index) => {
+      acc[index] = selectedStocks.includes(stock.symbol)
+      return acc
+    }, {} as Record<string, boolean>)
+  }, [stocks, selectedStocks])
+
+  React.useEffect(() => {
+    fetch("http://localhost:5000/api/portfolio_timeseries")
+      .then((res) => res.json())
+      .then((data) => {
+        const lastDateIndex = data.dates.length - 1;
+        const stocksData: Stock[] = Object.keys(data.series).map((symbol) => {
+          const series = data.series[symbol];
+          const start = series[0];
+          const end = series[lastDateIndex];
+          const percentGain = ((end - start) / start) * 100;
+          const close = end * 100;
+
+          // SPY gets black (first color), other symbols get subsequent colors
+          const colorIndex = symbol === "SPY" ? 0 : 
+            (Object.keys(data.series).indexOf(symbol) % (COLORS.length - 1)) + 1;
+
+          return {
+            symbol,
+            close: parseFloat(close.toFixed(2)),
+            percentGain: parseFloat(percentGain.toFixed(2)),
+            color: COLORS[colorIndex]
+          }
+        });
+
+        setStocks(stocksData);
+      })
+      .catch((err) => console.error("Error fetching stock data:", err))
+  }, [])
 
   const table = useReactTable({
-    data,
+    data: stocks,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -124,27 +172,39 @@ export function StockSelect() {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: (updater) => {
+      const newSelection = typeof updater === 'function' ? updater(rowSelection) : updater
+      const selectedSymbols = Object.entries(newSelection)
+        .filter(([_, selected]) => selected)
+        .map(([index]) => stocks[parseInt(index)].symbol)
+      onStockSelection(selectedSymbols)
+    },
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: {
+        color: true,
+        ...columnVisibility,
+      },
       rowSelection,
+      pagination: {
+        pageSize: 20, // Increase this to show more rows
+        pageIndex: 0,
+      },
     },
   })
+  
 
   return (
-    <div className="mx-auto w-[500px] p-4 font-['Roboto']">
-
-      
+    <div className="w-full font-['Roboto']">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="h-30">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="h-30">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -163,9 +223,16 @@ export function StockSelect() {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="h-30"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell 
+                      key={cell.id} 
+                      className={`h-30 ${
+                        cell.column.id === 'select' ? 'w-24' :
+                        cell.column.id === 'color' ? 'w-10' : ''
+                      }`}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -187,7 +254,6 @@ export function StockSelect() {
           </TableBody>
         </Table>
       </div>
-      
     </div>
   )
 }

@@ -25,10 +25,13 @@ export default function Portfolio({ data }) {
   }) || [];
   
   const COLORS = [
+    "#000000",  // SPY will be black
     "#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1",
     "#a4de6c", "#d0ed57", "#fa8072", "#b0e0e6", "#ffbb28"
   ];
-  
+
+  const myAssets = ["SPY", "AMZN", "META", "GOOGL", "AMD", "NKE", "UBER", "COST", "JPM", "CRM", "TXRH"]
+
   const chartConfig = {
     price: {
       label: "Close Price",
@@ -37,15 +40,15 @@ export default function Portfolio({ data }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full p-4 mt-36">
-      <Card className="w-[80vw] max-w-5xl shadow-md font-['Roboto']">
+    <div className="flex flex-col items-center justify-center w-full">
+      <Card className="w-full shadow-md font-['Roboto']">
         <CardHeader className="border-b p-6 text-center">
           <CardTitle className="text-2xl font-semibold mb-2 font-['Roboto']">Portfolio Prediction</CardTitle>
           <CardDescription className="text-base font-['Roboto']">Normalized asset movement compared to base date</CardDescription>
         </CardHeader>
         <CardContent className="p-6">
-          <ChartContainer config={chartConfig} className="items-center justify-center h-[300px] w-[80vw]">
-            <LineChart data={chartData} margin={{ left: 12, right: 12 }}>
+          <ChartContainer config={chartConfig} className="items-center justify-center h-[400px] w-full">
+            <LineChart data={chartData} margin={{ left: 12, right: 12 }} width={800} height={400}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="date"
@@ -84,16 +87,20 @@ export default function Portfolio({ data }) {
               />
 
 
-              {data?.series && Object.keys(data.series).map((symbol, idx) => (
-                <Line
-                  key={symbol}
-                  type="linear"
-                  dataKey={symbol}
-                  strokeWidth={symbol === "SPY" ? 4 : 2}
-                  dot={false}
-                  stroke={COLORS[idx % COLORS.length]}
-                />
-              ))}
+              {data?.series && Object.keys(data.series).map((symbol) => {
+                // Get the index from myAssets to ensure consistent coloring
+                const assetIndex = myAssets.indexOf(symbol);
+                return (
+                  <Line
+                    key={symbol}
+                    type="linear"
+                    dataKey={symbol}
+                    strokeWidth={symbol === "SPY" ? 4 : 2}
+                    dot={false}
+                    stroke={COLORS[assetIndex]}
+                  />
+                );
+              })}
 
               <YAxis
                 tickLine={false}
