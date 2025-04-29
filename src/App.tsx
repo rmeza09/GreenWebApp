@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Navbar from "./components/Navbar"
 import StockChart from "./components/StockChart"
+import { StockSelect } from "./components/StockSelect"
 import { PortfolioPie } from "./components/PortfolioPie";
 
 
@@ -36,6 +37,10 @@ function App() {
       
       <div className="pt-[100px]">
         {data && <StockChart data={data} />}
+      </div>
+
+      <div className="pt-[20px]">
+        <StockSelect />
       </div>
 
       <div className="pt-[20px]">
