@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from portfolioVis import run_model, get_portfolio_data, get_portfolio_timeseries  # Make sure this exists
+from portfolioVis import run_model, get_portfolio_data, get_portfolio_timeseries, get_performance_timeseries  # Make sure this exists
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
@@ -22,6 +22,10 @@ def portfolio_timeseries():
     result = get_portfolio_timeseries()
     return jsonify(result)
 
+@app.route("/api/performance_timeseries", methods=["GET"])
+def perfomance_timeseries():
+    result = get_performance_timeseries()
+    return jsonify(result)
 
 @app.route('/')  # Optional: just for sanity check
 def home():

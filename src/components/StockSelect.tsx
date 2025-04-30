@@ -223,7 +223,7 @@ export function StockSelect({ onStockSelection, selectedStocks }: StockSelectPro
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="h-30"
+                  className="h-[35px] border-b transition-colors hover:bg-muted"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell 

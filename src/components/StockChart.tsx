@@ -13,7 +13,7 @@ import {
 } from "./ui/chart";
 
 
-export default function Portfolio({ data }) {
+export default function StockChart({ data }) {
   const chartData = data?.dates?.map((date, index) => {
     const entry = { date: new Date(date).toISOString().slice(0, 10) };
   
@@ -43,8 +43,8 @@ export default function Portfolio({ data }) {
     <div className="flex flex-col items-center justify-center w-full">
       <Card className="w-full shadow-md font-['Roboto']">
         <CardHeader className="border-b p-6 text-center">
-          <CardTitle className="text-2xl font-semibold mb-2 font-['Roboto']">Portfolio Prediction</CardTitle>
-          <CardDescription className="text-base font-['Roboto']">Normalized asset movement compared to base date</CardDescription>
+          <CardTitle className="text-2xl font-semibold mb-2 font-['Roboto']">Portfolio Components</CardTitle>
+          <CardDescription className="text-base font-['Roboto']">Normalized asset movement compared to s&p500</CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <ChartContainer config={chartConfig} className="items-center justify-center h-[400px] w-full">

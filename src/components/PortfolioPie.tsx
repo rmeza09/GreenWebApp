@@ -55,7 +55,7 @@ export function PortfolioPie() {
 
   return (
     <div className="flex justify-center w-full">
-      <Card className="flex flex-col w-[700px] font-['Roboto']">
+      <Card className="flex flex-col w-[600px] font-['Roboto']">
         <CardHeader className="items-center pb-0">
           <CardTitle className="font-['Roboto']">Portfolio Distribution</CardTitle>
           <CardDescription className="font-['Roboto']">Based on Latest Closing Prices</CardDescription>
@@ -63,7 +63,7 @@ export function PortfolioPie() {
         <CardContent className="flex-1 pb-0">
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square max-h-[500px] [&_.recharts-text]:fill-background"
+            className="mx-auto aspect-square max-h-[400px] [&_.recharts-text]:fill-background"
           >
             <PieChart width={750} height={300}>
               <ChartTooltip
@@ -130,14 +130,7 @@ export function PortfolioPie() {
             </PieChart>
           </ChartContainer>
         </CardContent>
-        <CardFooter className="flex-col gap-2 text-sm">
-          <div className="flex items-center gap-2 font-medium leading-none font-['Roboto']">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-          </div>
-          <div className="leading-none text-muted-foreground font-['Roboto']">
-            Showing portfolio breakdown
-          </div>
-        </CardFooter>
+        
       </Card>
     </div>
   )

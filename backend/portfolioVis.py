@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
@@ -131,3 +132,79 @@ def get_portfolio_timeseries(days=365):
         "dates": [str(date) for date in dates],
         "series": timeseries
     }
+
+def get_performance_timeseries(days=365):
+    global myAssets, shareCount
+
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=days)
+
+    request = StockBarsRequest(
+        symbol_or_symbols=["SPY"] + myAssets[1:],  # Include SPY and all other assets
+        timeframe=TimeFrame.Day,
+        start=start_date,
+        end=end_date
+    )
+
+    try:
+        bars = client.get_stock_bars(request).df
+        
+        if bars.empty:
+            raise ValueError("No stock data returned")
+
+        dates = sorted(list(set(bars.index.get_level_values(1).date)))
+        
+        # Get SPY data first
+        spy_data = bars.xs("SPY", level=0).reset_index()
+        spy_closes = spy_data["close"].tolist()
+        spy_normalized = [price / spy_closes[0] for price in spy_closes]
+        
+        # Calculate portfolio performance
+        portfolio_symbols = myAssets[1:]  # Exclude SPY
+        portfolio_shares = shareCount[1:]  # Exclude SPY shares
+        
+        # Get initial portfolio value
+        initial_values = []
+        for symbol, shares in zip(portfolio_symbols, portfolio_shares):
+            try:
+                symbol_data = bars.xs(symbol, level=0).reset_index()
+                initial_price = symbol_data["close"].iloc[0]
+                initial_values.append(initial_price * shares)
+            except KeyError:
+                print(f"Warning: No data found for {symbol}")
+                continue
+        
+        initial_portfolio_value = sum(initial_values)
+        
+        # Calculate portfolio value over time
+        portfolio_values = []
+        for date_idx in range(len(dates)):
+            daily_value = 0
+            for symbol, shares in zip(portfolio_symbols, portfolio_shares):
+                try:
+                    symbol_data = bars.xs(symbol, level=0).reset_index()
+                    price = symbol_data["close"].iloc[date_idx]
+                    daily_value += price * shares
+                except (KeyError, IndexError):
+                    continue
+            portfolio_values.append(daily_value)
+        
+        # Normalize portfolio values
+        portfolio_normalized = [value / portfolio_values[0] for value in portfolio_values]
+        
+        print("Debug - Data structure:")
+        print(f"Number of dates: {len(dates)}")
+        print(f"SPY data points: {len(spy_normalized)}")
+        print(f"Portfolio data points: {len(portfolio_normalized)}")
+        
+        return {
+            "dates": [str(date) for date in dates],
+            "series": {
+                "SPY": spy_normalized,
+                "Portfolio": portfolio_normalized
+            }
+        }
+    except Exception as e:
+        print(f"Error in get_performance_timeseries: {str(e)}")
+        raise
+

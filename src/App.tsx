@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar"
 import StockChart from "./components/StockChart"
 import { StockSelect } from "./components/StockSelect"
 import { PortfolioPie } from "./components/PortfolioPie"
+import AvgPerformance from "./components/AvgPerformance"
 
 import "@fortawesome/fontawesome-free/css/all.min.css"
 import "./styles/globals.css"
@@ -56,14 +57,14 @@ function App() {
       {/* Main content area with 95% width */}
       <div className="w-[95%] mx-auto pt-[100px]">
         {/* Chart and Table container */}
-        <div className="flex gap-4">
+        <div className="flex items-center gap-8">
           {/* StockChart - 2/3 width */}
-          <div className="w-2/3">
+          <div className="flex-[2]">
             {data && <StockChart data={filteredData || { dates: data.dates, series: {} }} />}
           </div>
 
           {/* StockSelect - 1/3 width */}
-          <div className="w-1/3">
+          <div className="flex-[1]">
             <StockSelect 
               onStockSelection={handleStockSelection}
               selectedStocks={selectedStocks} 
@@ -71,9 +72,16 @@ function App() {
           </div>
         </div>
 
-        {/* Portfolio Pie below */}
-        <div className="pt-[20px]">
-          <PortfolioPie />
+        {/* PortfolioPie and AvgPerformance side by side */}
+        <div className="flex gap-8 items-center pt-[20px] max-w-[1600px] mx-auto">
+          {/* PortfolioPie - 50% width */}
+          <div className="w-1/2">
+            <PortfolioPie />
+          </div>
+          {/* AvgPerformance - 50% width */}
+          <div className="w-1/2">
+            <AvgPerformance />
+          </div>
         </div>
       </div>
     </div>
