@@ -31,5 +31,22 @@ def perfomance_timeseries():
 def home():
     return "Flask server running!"
 
+@app.route('/api/custom_portfolio', methods=['POST'])
+def custom_portfolio():
+    data = request.get_json()
+    symbols = data.get("symbols")
+    shares = data.get("shares")
+    
+    port_df = get_portfolio_data(symbols, shares)
+    ts_data = get_portfolio_timeseries(symbols)
+    perf_data = get_performance_timeseries(symbols, shares)
+    
+    return jsonify({
+        "distribution": port_df.to_dict(orient="records"),
+        "timeseries": ts_data,
+        "performance": perf_data
+    })
+
+
 if __name__ == '__main__':
     app.run(debug=True)

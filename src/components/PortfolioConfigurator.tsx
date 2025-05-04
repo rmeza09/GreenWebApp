@@ -36,6 +36,9 @@ import {
       fetch("/stock_symbols.json")
         .then(res => res.json())
         .then(data => setAllSymbols(data))
+        .catch(err => {
+            console.error("Error loading stock symbols:", err)
+          })
     }, [])
   
     
@@ -79,7 +82,10 @@ import {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Stocks">
               {allSymbols
-                .filter(s => s.symbol.includes(searchTerm.toUpperCase()))
+                .filter(s =>
+                    s.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    s.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
                 .map(s => (
                   <CommandItem key={s.symbol} onSelect={() => handleAdd(s.symbol)}>
                     <span>{s.symbol} - {s.name}</span>
@@ -97,7 +103,10 @@ import {
                 type="number"
                 className="border p-1 w-24 ml-2"
                 value={item.weight}
-                onChange={e => handleWeightChange(idx, parseFloat(e.target.value))}
+                onChange={e => {
+                    const value = parseFloat(e.target.value)
+                    handleWeightChange(idx, isNaN(value) ? 0 : value)
+                  }}                  
               />
             </div>
           ))}

@@ -4,6 +4,7 @@ import StockChart from "./components/StockChart"
 import { StockSelect } from "./components/StockSelect"
 import { PortfolioPie } from "./components/PortfolioPie"
 import AvgPerformance from "./components/AvgPerformance"
+import { PortfolioConfigurator } from "./components/PortfolioConfigurator"
 
 import "@fortawesome/fontawesome-free/css/all.min.css"
 import "./styles/globals.css"
@@ -83,6 +84,10 @@ function App() {
             <AvgPerformance />
           </div>
         </div>
+        
+        <div className="w-1/2  items-center mx-auto" >
+            <PortfolioConfigurator />
+          </div>
       </div>
     </div>
   )

@@ -62,9 +62,9 @@ def run_model(data):
     }
     return result
 
-def get_portfolio_data(days=30):
+def get_portfolio_data(myAssets, shareCount, days=30):
     # Use global myAssets and shareCount
-    global myAssets, shareCount
+    #global myAssets, shareCount
 
     end_date = datetime.today()
     start_date = end_date - timedelta(days=days)  # 1 year of daily prices
@@ -96,9 +96,9 @@ def get_portfolio_data(days=30):
     return Assetsdf
 
 
-def get_portfolio_timeseries(days=365):
+def get_portfolio_timeseries(myAssets, days=365):
     # Use global myAssets
-    global myAssets
+    #global myAssets
     
     end_date = datetime.now()
     start_date = end_date - timedelta(days=days)
@@ -133,8 +133,8 @@ def get_portfolio_timeseries(days=365):
         "series": timeseries
     }
 
-def get_performance_timeseries(days=365):
-    global myAssets, shareCount
+def get_performance_timeseries(myAssets, shareCount, days=365):
+    #global myAssets, shareCount
 
     end_date = datetime.now()
     start_date = end_date - timedelta(days=days)

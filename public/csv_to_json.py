@@ -1,8 +1,8 @@
 import csv
 import json
 
-input_csv = "symbols.csv"
-output_json = "public/stock_symbols.json"  # place this in your React public folder
+input_csv = "public/symbols.csv"
+output_json = "public/stock_symbols.json" 
 
 symbols = []
 
@@ -17,4 +17,4 @@ with open(input_csv, mode='r', encoding='utf-8-sig') as file:
 with open(output_json, mode='w', encoding='utf-8') as file:
     json.dump(symbols, file, indent=2)
 
-print(f"✅ Exported {len(symbols)} symbols to {output_json}")
+print(f"Exported {len(symbols)} symbols to {output_json}")
