@@ -16,6 +16,7 @@ function App() {
   const [data, setData] = useState<{ dates: string[]; series: { [key: string]: number[] } } | null>(null)
   const [selectedStocks, setSelectedStocks] = useState<string[]>([])
   const [portfolioWeights, setPortfolioWeights] = useState<number[]>([])
+  console.log("✅ App component mounted!");
 
   const handleStockSelection = (selectedSymbols: string[]) => {
     console.log("StockSelect selection received:", selectedSymbols)
