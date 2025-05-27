@@ -28,7 +28,7 @@ export default function AvgPerformance() {
     const fetchData = async () => {
       try {
         console.log("Fetching performance data...");
-        const response = await fetch("http://localhost:5000/api/performance_timeseries");
+        const response = await fetch("https://greenwebapp-api-backend.onrender.com/api/performance_timeseries");
         console.log("Response status:", response.status);
         
         if (!response.ok) {

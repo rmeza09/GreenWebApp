@@ -81,7 +81,7 @@ export default function StockChart({ symbols, weights }) {
 
     // Only fetch if we have symbols to fetch and the fetchOptions body was set
     if (shouldFetch && fetchOptions.body) {
-        let url = "http://localhost:5000/api/custom_portfolio";
+      let url = "https://greenwebapp-api-backend.onrender.com/api/custom_portfolio";
         fetch(url, fetchOptions)
         .then(res => res.json())
         .then(result => {

@@ -99,7 +99,7 @@ import {
 
       console.log("Sending update with:", { symbols, weights });
       
-      fetch("http://localhost:5000/api/custom_portfolio", {
+      fetch("https://greenwebapp-api-backend.onrender.com/api/custom_portfolio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

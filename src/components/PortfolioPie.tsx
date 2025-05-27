@@ -37,7 +37,7 @@ export function PortfolioPie() {
   const [portfolioData, setPortfolioData] = useState<PortfolioItem[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/portfolio")
+    fetch("https://greenwebapp-api-backend.onrender.com/api/portfolio")
       .then((res) => res.json())
       .then((data) => {
         // Filter out SPY from the portfolio data

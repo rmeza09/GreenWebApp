@@ -4,7 +4,13 @@ from portfolioVis import run_model, get_portfolio_data, get_portfolio_timeseries
 
 app = Flask(__name__)
 # Ensure CORS is applied to all /api/* routes and allows POST
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000", "methods": ["GET", "POST", "OPTIONS"]}})
+CORS(app, resources={r"/api/*": {
+    "origins": [
+        "http://localhost:3000",
+        "https://greenwebapp.vercel.app"
+    ],
+    "methods": ["GET", "POST", "OPTIONS"]
+}})
 
 @app.route('/api/predict', methods=['POST'])  
 def predict():
