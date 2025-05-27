@@ -65,21 +65,21 @@ function App() {
         </div>
 
         {/* PortfolioPie and AvgPerformance side by side */}
+        {/*
         <div className="flex gap-8 items-center pt-[20px] max-w-[1600px] mx-auto">
-          {/* PortfolioPie - 50% width */}
           <div className="w-1/2">
-            {/* Pass selectedStocks and portfolioWeights to PortfolioPie */}
             <PortfolioPie symbols={selectedStocks} weights={portfolioWeights} />
           </div>
-          {/* AvgPerformance - 50% width */}
           <div className="w-1/2">
             <AvgPerformance />
           </div>
         </div>
+        */}
+
         
-          <div className="w-1/2  items-center mx-auto" >
-            <PortfolioConfigurator onUpdate={handlePortfolioUpdate} />
-          </div>
+        <div className="w-1/2  items-center mx-auto" >
+          <PortfolioConfigurator onUpdate={handlePortfolioUpdate} />
+        </div>
       </div>
     </div>
   )
