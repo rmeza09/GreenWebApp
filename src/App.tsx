@@ -15,41 +15,31 @@ function App() {
   const [activeSection, setActiveSection] = useState<string>("resume")
   const [data, setData] = useState<{ dates: string[]; series: { [key: string]: number[] } } | null>(null)
   const [selectedStocks, setSelectedStocks] = useState<string[]>([])
-
-  useEffect(() => {
-    console.log("Starting fetch call for portfolio timeseries...");
-  
-    fetch("http://localhost:5000/api/portfolio_timeseries")
-      .then((res) => {
-        console.log("Response status:", res.status)
-        return res.json()
-      })
-      .then((result) => {
-        console.log("Backend portfolio timeseries result:", result)
-        setData(result)
-        // Initialize with all stocks selected
-        const allStocks = Object.keys(result.series)
-        setSelectedStocks(allStocks)
-      })
-      .catch((err) => console.error("Fetch error:", err));
-  }, []);
+  const [portfolioWeights, setPortfolioWeights] = useState<number[]>([])
 
   const handleStockSelection = (selectedSymbols: string[]) => {
-    console.log("Selected stocks:", selectedSymbols)
+    console.log("StockSelect selection received:", selectedSymbols)
     setSelectedStocks(selectedSymbols)
+    setPortfolioWeights([]);
   }
 
-  // Filter the data to only include selected stocks
-  const filteredData = data ? {
-    ...data,
-    series: selectedStocks.length > 0 
-      ? Object.fromEntries(
-          Object.entries(data.series).filter(([symbol]) => 
-            selectedStocks.includes(symbol)
-          )
-        )
-      : {} // Empty series when no stocks selected
-  } : null;
+  const handlePortfolioUpdate = (newSymbols: string[], newWeights: number[]) => {
+    console.log("PortfolioConfigurator update received:");
+    console.log("Symbols:", newSymbols);
+    console.log("Weights:", newWeights);
+    
+    // Update the selected stocks and weights
+    setSelectedStocks(newSymbols);
+    setPortfolioWeights(newWeights);
+    
+    // Log the current state after update
+    console.log("Updated selectedStocks state:", newSymbols);
+    console.log("Updated portfolioWeights state:", newWeights);
+    console.log("App.tsx - selectedStocks passed to StockChart:", newSymbols);
+  };
+
+  console.log("App.tsx - Rendering StockChart with symbols:", selectedStocks);
+  console.log("App.tsx - Rendering StockChart with weights:", portfolioWeights);
 
   return (
     <div className="w-full overflow-x-hidden">
@@ -60,16 +50,17 @@ function App() {
         {/* Chart and Table container */}
         <div className="flex items-center gap-8">
           {/* StockChart - 2/3 width */}
-          <div className="flex-[2]">
-            {data && <StockChart data={filteredData || { dates: data.dates, series: {} }} />}
-          </div>
+          
+            {/* Pass both symbols and weights to StockChart */}
+            <StockChart symbols={selectedStocks} weights={portfolioWeights} />
+          
 
           {/* StockSelect - 1/3 width */}
           <div className="flex-[1]">
-            <StockSelect 
+            {/* <StockSelect 
               onStockSelection={handleStockSelection}
               selectedStocks={selectedStocks} 
-            />
+            /> */}
           </div>
         </div>
 
@@ -77,7 +68,8 @@ function App() {
         <div className="flex gap-8 items-center pt-[20px] max-w-[1600px] mx-auto">
           {/* PortfolioPie - 50% width */}
           <div className="w-1/2">
-            <PortfolioPie />
+            {/* Pass selectedStocks and portfolioWeights to PortfolioPie */}
+            <PortfolioPie symbols={selectedStocks} weights={portfolioWeights} />
           </div>
           {/* AvgPerformance - 50% width */}
           <div className="w-1/2">
@@ -85,8 +77,8 @@ function App() {
           </div>
         </div>
         
-        <div className="w-1/2  items-center mx-auto" >
-            <PortfolioConfigurator />
+          <div className="w-1/2  items-center mx-auto" >
+            <PortfolioConfigurator onUpdate={handlePortfolioUpdate} />
           </div>
       </div>
     </div>

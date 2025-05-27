@@ -124,14 +124,15 @@ export function StockSelect({ onStockSelection, selectedStocks }: StockSelectPro
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [stocks, setStocks] = React.useState<Stock[]>([])
+  const [tempSelectedStocks, setTempSelectedStocks] = React.useState<string[]>([])
 
   // Convert selectedStocks to row selection state
   const rowSelection = React.useMemo(() => {
     return stocks.reduce((acc, stock, index) => {
-      acc[index] = selectedStocks.includes(stock.symbol)
+      acc[index] = tempSelectedStocks.includes(stock.symbol)
       return acc
     }, {} as Record<string, boolean>)
-  }, [stocks, selectedStocks])
+  }, [stocks, tempSelectedStocks])
 
   React.useEffect(() => {
     fetch("http://localhost:5000/api/portfolio_timeseries")
@@ -162,6 +163,11 @@ export function StockSelect({ onStockSelection, selectedStocks }: StockSelectPro
       .catch((err) => console.error("Error fetching stock data:", err))
   }, [])
 
+  const handleUpdate = () => {
+    console.log("Update clicked with stocks:", tempSelectedStocks);
+    onStockSelection(tempSelectedStocks);
+  };
+
   const table = useReactTable({
     data: stocks,
     columns,
@@ -177,7 +183,7 @@ export function StockSelect({ onStockSelection, selectedStocks }: StockSelectPro
       const selectedSymbols = Object.entries(newSelection)
         .filter(([_, selected]) => selected)
         .map(([index]) => stocks[parseInt(index)].symbol)
-      onStockSelection(selectedSymbols)
+      setTempSelectedStocks(selectedSymbols)
     },
     state: {
       sorting,
@@ -188,7 +194,7 @@ export function StockSelect({ onStockSelection, selectedStocks }: StockSelectPro
       },
       rowSelection,
       pagination: {
-        pageSize: 20, // Increase this to show more rows
+        pageSize: 20,
         pageIndex: 0,
       },
     },
