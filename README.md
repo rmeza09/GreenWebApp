@@ -1,2 +1,2 @@
-# GreenWebApp
-This web app is built to display some financial modeling using historical data to practice training models and visualizing data.
+# Green Machine Web Application
+Through this project my objective was to learn how to build out a backend database for communicating with the Alpaca API. Alpaca is a service which serves finnancial data including asset prices for equities and crypto on a variety of timescales. In this project I learned to use Flask as the backend framework and React with Typescript and Tailwind CSS for the frontend tech stack.
