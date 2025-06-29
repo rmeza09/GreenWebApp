@@ -16,7 +16,20 @@ function App() {
   const [data, setData] = useState<{ dates: string[]; series: { [key: string]: number[] } } | null>(null)
   const [selectedStocks, setSelectedStocks] = useState<string[]>([])
   const [portfolioWeights, setPortfolioWeights] = useState<number[]>([])
+  const [hasError, setHasError] = useState<boolean>(false)
+  
   console.log("✅ App component mounted!");
+
+  useEffect(() => {
+    // Add error boundary for the entire app
+    const handleError = (error: ErrorEvent) => {
+      console.error("App error caught:", error);
+      setHasError(true);
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
 
   const handleStockSelection = (selectedSymbols: string[]) => {
     console.log("StockSelect selection received:", selectedSymbols)
@@ -41,6 +54,23 @@ function App() {
 
   console.log("App.tsx - Rendering StockChart with symbols:", selectedStocks);
   console.log("App.tsx - Rendering StockChart with weights:", portfolioWeights);
+
+  if (hasError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-red-50">
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold text-red-800 mb-4">Something went wrong</h1>
+          <p className="text-red-600 mb-4">The app encountered an error. Please check the console for details.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full overflow-x-hidden">

@@ -12,6 +12,22 @@ import {
   ChartTooltipContent,
 } from "./ui/chart";
 
+// Define types
+interface StockChartProps {
+  symbols: string[];
+  weights: number[];
+}
+
+interface ChartData {
+  dates: string[];
+  series: { [key: string]: number[] };
+}
+
+interface ChartEntry {
+  date: string;
+  [key: string]: number | string;
+}
+
 // Define assets list once at the top level (kept for default display and coloring reference)
 const myAssets = ["SPY", "AMZN", "META", "GOOGL", "AMD", "NKE", "UBER", "COST", "JPM", "CRM", "TXRH"];
 const COLORS = [
@@ -20,8 +36,8 @@ const COLORS = [
   "#a4de6c", "#d0ed57", "fa8072", "b0e0e6", "ffbb28"
 ];
 
-export default function StockChart({ symbols, weights }) {
-  const [data, setData] = useState(null);
+export default function StockChart({ symbols, weights }: StockChartProps) {
+  const [data, setData] = useState<ChartData | null>(null);
   // Removed state to manage the symbols currently being displayed: currentSymbols
 
   // Effect to fetch data whenever symbols or weights change
@@ -84,7 +100,7 @@ export default function StockChart({ symbols, weights }) {
       let url = "https://greenwebapp-api-backend.onrender.com/api/custom_portfolio";
         fetch(url, fetchOptions)
         .then(res => res.json())
-        .then(result => {
+        .then((result: any) => {
           console.log("StockChart received data:", result);
           // Use the timeseries data which contains individual stock performance
           setData(result?.timeseries);
@@ -97,8 +113,8 @@ export default function StockChart({ symbols, weights }) {
 
   }, [symbols, weights]); // Depend directly on symbols and weights props
 
-  const chartData = data?.dates?.map((date, index) => {
-    const entry = { date: new Date(date).toISOString().slice(0, 10) };
+  const chartData: ChartEntry[] = data?.dates?.map((date, index) => {
+    const entry: ChartEntry = { date: new Date(date).toISOString().slice(0, 10) };
   
     // Ensure data.series exists before iterating
     if (data?.series) {

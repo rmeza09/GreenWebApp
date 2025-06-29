@@ -1,7 +1,11 @@
 import React from "react";
 import Logo from "../assets/GreenMachine.png";
 
-function Navbar({ setActiveSection }) {
+interface NavbarProps {
+  setActiveSection: (section: string) => void;
+}
+
+function Navbar({ setActiveSection }: NavbarProps) {
   return (
     <header className="fixed top-0 left-0 w-full bg-[#44bf59] h-[75px] z-[1000] shadow-md">
       <div className="grid grid-cols-12 h-full">
