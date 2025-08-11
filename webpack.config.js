@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.tsx",
@@ -49,9 +50,10 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"], // Add .ts and .tsx to the list of resolvable extensions
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./public/index.html",
-    }),
+    new HtmlWebpackPlugin({ template: "./public/index.html", inject: "body" }),
+    new webpack.DefinePlugin({
+      "process.env.API_BASE": JSON.stringify(process.env.API_BASE || "")
+    })
   ],
   devServer: {
     static: "./dist",

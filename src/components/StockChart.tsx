@@ -12,12 +12,22 @@ import {
   ChartTooltipContent,
 } from "./ui/chart";
 
+// let TypeScript accept the injected env at build time
+declare const process: { env: { API_BASE?: string } };
+
+const API_BASE = (process.env.API_BASE || "http://localhost:5000").replace(/\/+$/, "");
+const CUSTOM_PORTFOLIO_URL = `${API_BASE}/api/custom_portfolio`;
+
+type Timeseries = { dates: string[]; series: Record<string, number[]> };
+type PortfolioResponse = { timeseries: Timeseries };
+
+
 // Define assets list once at the top level (kept for default display and coloring reference)
 const myAssets = ["SPY", "AMZN", "META", "GOOGL", "AMD", "NKE", "UBER", "COST", "JPM", "CRM", "TXRH"];
 const COLORS = [
   "#000000",  // SPY will be black
   "#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1",
-  "#a4de6c", "#d0ed57", "fa8072", "b0e0e6", "ffbb28"
+  "#a4de6c", "#d0ed57", "#fa8072", "#b0e0e6", "#ffbb28"
 ];
 
 export default function StockChart({ symbols, weights }) {
@@ -81,19 +91,27 @@ export default function StockChart({ symbols, weights }) {
 
     // Only fetch if we have symbols to fetch and the fetchOptions body was set
     if (shouldFetch && fetchOptions.body) {
-        let url = "http://localhost:5000/api/custom_portfolio";
-        fetch(url, fetchOptions)
-        .then(res => res.json())
-        .then(result => {
-          console.log("StockChart received data:", result);
-          // Use the timeseries data which contains individual stock performance
-          setData(result?.timeseries);
-        })
-        .catch(err => console.error("Error fetching stock chart data:", err));
+      const controller = new AbortController();
+
+      (async () => {
+        try {
+          const res = await fetch(CUSTOM_PORTFOLIO_URL, { ...fetchOptions, signal: controller.signal });
+          if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+          const result: PortfolioResponse = await res.json();
+          setData(result?.timeseries ?? null);
+        } catch (err) {
+          console.error("Error fetching stock chart data:", err);
+          setData(null);
+        }
+      })();
+
+      // cleanup if props change quickly
+      return () => controller.abort();
     } else if (symbolsToFetch && symbolsToFetch.length > 0) {
-         console.log("StockChart fetch useEffect: Skipping fetch because fetchOptions.body was not set correctly.");
-         setData(null);
+      console.log("StockChart: skipping fetch, body not set correctly.");
+      setData(null);
     }
+
 
   }, [symbols, weights]); // Depend directly on symbols and weights props
 
