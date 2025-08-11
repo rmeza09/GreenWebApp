@@ -22,6 +22,13 @@ import {
   import stockSymbols from "../assets/stock_symbols.json"
   import { Button } from "@/components/ui/button"
 
+  // add near the top (after imports)
+  declare const process: { env: { API_BASE?: string } };
+
+  const API_BASE = (process.env.API_BASE || "http://localhost:5000").replace(/\/+$/, "");
+  const CUSTOM_PORTFOLIO_URL = `${API_BASE}/api/custom_portfolio`;
+  console.log("API_BASE =", API_BASE); // leave for one deploy to verify
+
 
   type Stock = {
     symbol: string
@@ -77,48 +84,36 @@ import {
       setPortfolio(updated)
     }
   
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
       console.log("PortfolioConfigurator handleSubmit called");
       console.log("Current portfolio state:", portfolio);
-      
+
       let symbols = portfolio.map(p => p.symbol);
       let weights = portfolio.map(p => Number(p.weight) || 0);
-      
-      // Append SPY with a weight of 1 if not already present
-      const spySymbol = "SPY";
-      const spyWeight = 1;
 
-      if (!symbols.includes(spySymbol)) {
-          symbols = [...symbols, spySymbol];
-          weights = [...weights, spyWeight];
-      } else {
-          // If SPY is already in the list, ensure its weight is handled (optional, based on desired behavior if user explicitly adds SPY)
-          // For now, we'll just ensure it's there. If the user set a different weight, it will be used.
-          console.log("SPY already in portfolio. Using user-defined weight if any.");
+      // ensure SPY exists
+      if (!symbols.includes("SPY")) {
+        symbols = [...symbols, "SPY"];
+        weights = [...weights, 1];
       }
 
       console.log("Sending update with:", { symbols, weights });
-      
-      fetch("http://localhost:5000/api/custom_portfolio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          symbols,
-          shares: weights
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
+
+      try {
+        const res = await fetch(CUSTOM_PORTFOLIO_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symbols, shares: weights }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        const data = await res.json();
         console.log("Backend response:", data);
-        if (onUpdate) {
-          console.log("PortfolioConfigurator: Calling onUpdate with symbols:", symbols, "and weights:", weights);
-          onUpdate(symbols, weights);
-        }
-      })
-      .catch(error => {
-        console.error("Error updating portfolio:", error);
-      });
-    }
+        onUpdate?.(symbols, weights);
+      } catch (err) {
+        console.error("Error updating portfolio:", err);
+      }
+    };
+
   
     const handleClear = () => {
       console.log("PortfolioConfigurator: Clear button clicked");

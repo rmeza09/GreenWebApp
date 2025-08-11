@@ -9,12 +9,12 @@ function DesktopNavbar({ setActiveSection }) {
       >
         Home
       </button>
-      <button
+      {/* <button
         onClick={() => setActiveSection("linear modeling")}
         className="text-black text-[1rem] hover:font-bold transition-all"
       >
         Linear Modeling
-      </button>
+      </button> */}
     </nav>
   );
 }
