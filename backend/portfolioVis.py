@@ -5,6 +5,9 @@ from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
 
+# add this import near the top
+from alpaca.data.enums import DataFeed
+
 import os
 from dotenv import load_dotenv
 
@@ -26,7 +29,8 @@ def get_stock_data(symbol="AAPL", days=365):
         symbol_or_symbols=[symbol],
         timeframe=TimeFrame.Day,
         start=start_date,
-        end=end_date
+        end=end_date,
+        feed=DataFeed.IEX 
     )
 
     bars = client.get_stock_bars(request_params)
@@ -73,7 +77,8 @@ def get_portfolio_data(symbols, shares, days=30):
         symbol_or_symbols=symbols, # Use passed symbols
         timeframe=TimeFrame.Day,
         start=start_date,
-        end=end_date
+        end=end_date,
+        feed=DataFeed.IEX
     )
 
     bars = client.get_stock_bars(request).df
@@ -115,7 +120,8 @@ def get_portfolio_timeseries(myAssets, days=365):
         symbol_or_symbols=myAssets,
         timeframe=TimeFrame.Day,
         start=start_date,
-        end=end_date
+        end=end_date,
+        feed=DataFeed.IEX
     )
 
     bars = client.get_stock_bars(request).df
@@ -166,7 +172,8 @@ def get_performance_timeseries(symbols, shares, days=365):
         symbol_or_symbols=all_symbols, # Use all_symbols including SPY
         timeframe=TimeFrame.Day,
         start=start_date,
-        end=end_date
+        end=end_date,
+        feed=DataFeed.IEX
     )
 
     try:
