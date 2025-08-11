@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 from portfolioVis import run_model, get_portfolio_data, get_portfolio_timeseries, get_performance_timeseries  # Make sure this exists
 
+from flask_cors import CORS, cross_origin
+
 app = Flask(__name__)
-# Ensure CORS is applied to all /api/* routes and allows POST
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000", "methods": ["GET", "POST", "OPTIONS"]}})
+
+# Temporary: allow all on /api/* while we test
+CORS(app,
+     resources={r"/api/*": {"origins": "*"}},
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "OPTIONS"])
+
 
 @app.route('/api/predict', methods=['POST'])  
 def predict():
@@ -12,7 +18,7 @@ def predict():
     result = run_model(input_data)
     return jsonify(result)
 
-@app.route("/api/portfolio", methods=["GET"])
+@app.route("/api/portfolio", methods=["POST"])
 def portfolio():
     data = request.get_json()
     symbols = data.get("symbols")
@@ -29,7 +35,7 @@ def portfolio_timeseries():
     result = get_portfolio_timeseries(symbols)
     return jsonify(result)
 
-@app.route("/api/performance_timeseries", methods=["GET"])
+@app.route("/api/performance_timeseries", methods=["POST"])
 def perfomance_timeseries():
     data = request.get_json()
     symbols = data.get("symbols")
@@ -41,8 +47,10 @@ def perfomance_timeseries():
 def home():
     return "Flask server running!"
 
-@app.route('/api/custom_portfolio', methods=['POST'])
+@app.route('/api/custom_portfolio', methods=['POST', 'OPTIONS'])
 def custom_portfolio():
+    if request.method == 'OPTIONS':
+        return ("", 204)  # preflight OK
     data = request.get_json()
     symbols = data.get("symbols")
     shares = data.get("shares")
