@@ -3,17 +3,21 @@ Through this project my objective was to learn how to build out a backend databa
 
 ### 🔗 Live Site: [https://green-web-app.vercel.app/](https://green-web-app.vercel.app/)
 ### THE SITE IS SLOW, be patient with the render backend I only have the free tier
-It can take 20-30 seconds for Render to process the fetch request and the back end winds down after 50 seconds of inactivity.
+It can take 30 - 60 seconds for Render to process the API request and the back end winds down after 50 seconds of inactivity.
+
+<p align="center">
+  <img src="src/assets/Green_Web-App.png" width="750">
+</p>
 
 ### Current Updates
 - The Render backend is up and running.
 - The front end is in production, up and running.
-- Full project can be run from the testing branch locally.
+- Full project can be run from the testing/main branch locally.
 
 ## 🌱 Features
 - Stock selector tool, the user can pick any stock listed on the NYSE, using the search bar and adding up to 10 individual stocks.
 - Asset Visualizer, after confirming selections the normalized performance of each individual asset is plotted against the S&P 500 (SPY) baseline, 365 day view.
-- Pi Chart, the percentage of the whole portfolio is visualized and the weight (shares) can be changed in the selector tool for each stock.
+- Pie Chart, the percentage of the whole portfolio is visualized and the weight (shares) can be changed in the selector tool for each stock.
 - Performance analysis, assuming a group of 2 - 10 stocks the weighted average performance of the holdings is plotted against the S&P 500 (SPY) reference. This is how well you would have done in the last 365 days if you had purchased the selected holdings a year prior, the percentage gain or loss is shown here.
 
 ## 🧰 Tech Stack
