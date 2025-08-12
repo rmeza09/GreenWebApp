@@ -6,9 +6,7 @@ Through this project my objective was to learn how to build out a backend databa
 
 ### Current Updates
 - The Render backend is up and running.
-- Locally the front end is up and running.
-- Working on changing the fetch calls from the local server to the Render server.
-- Frontend is not currently displaying from the production, main branch.
+- The front end is in production, up and running.
 - Full project can be run from the testing branch locally.
 
 ## 🌱 Features
@@ -62,7 +60,7 @@ python -m venv .venv
 ```
 To run the Flask backend start the venv and run the app.py, requirements only need to be installed once.
 ```bash
-.venv\Scripts\activate.bat 
+.\venv\Scripts\activate.bat 
 pip install -r requirements.txt
 python app.py
 ```
