@@ -185,24 +185,23 @@ export default function StockChart({ symbols, weights }) {
               />
 
 
-              {data?.series && Object.keys(data.series).map((symbol) => {
-                // Use the symbol directly for the key
-                // Get the index from myAssets to ensure consistent coloring
-                const assetIndex = myAssets.indexOf(symbol);
-                // Use myAssets index for coloring, fallback if symbol not in myAssets list
-                const lineColor = assetIndex !== -1 ? COLORS[assetIndex % COLORS.length] : "#cccccc"; // Use a default grey for symbols not in myAssets
-
+              {data?.series && Object.keys(data.series).map((symbol, i) => {
+                const stroke =
+                  symbol === "SPY"
+                    ? COLORS[0]
+                    : COLORS[1 + (i % (COLORS.length - 1))];
                 return (
                   <Line
                     key={symbol}
                     type="linear"
                     dataKey={symbol}
-                    strokeWidth={2} // Default stroke width for individual stocks
+                    strokeWidth={2}
                     dot={false}
-                    stroke={lineColor}
+                    stroke={stroke}
                   />
                 );
               })}
+
 
               <YAxis
                 tickLine={false}

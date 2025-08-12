@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react"
 import Navbar from "./components/Navbar"
 import StockChart from "./components/StockChart"
 import { StockSelect } from "./components/StockSelect"
-import { PortfolioPie } from "./components/PortfolioPie"
+import PortfolioPie from "./components/PortfolioPie";
+
 import AvgPerformance from "./components/AvgPerformance"
 import { PortfolioConfigurator } from "./components/PortfolioConfigurator"
 
@@ -48,38 +49,25 @@ function App() {
       {/* Main content area with 95% width */}
       <div className="w-[95%] mx-auto pt-[100px]">
         {/* Chart and Table container */}
-        <div className="flex items-center gap-8">
-          {/* StockChart - 2/3 width */}
-          
-            {/* Pass both symbols and weights to StockChart */}
-            <StockChart symbols={selectedStocks} weights={portfolioWeights} />
-          
-
-          {/* StockSelect - 1/3 width */}
-          <div className="flex-[1]">
-            {/* <StockSelect 
-              onStockSelection={handleStockSelection}
-              selectedStocks={selectedStocks} 
-            /> */}
-          </div>
+        {/* Top chart */}
+        <div className="mb-6">
+          <StockChart symbols={selectedStocks} weights={portfolioWeights} />
         </div>
 
-        {/* PortfolioPie and AvgPerformance side by side */}
-        <div className="flex gap-8 items-center pt-[20px] max-w-[1600px] mx-auto">
-          {/* PortfolioPie - 50% width */}
-          <div className="w-1/2">
-            {/* Pass selectedStocks and portfolioWeights to PortfolioPie 
-            <PortfolioPie symbols={selectedStocks} weights={portfolioWeights} />*/}
+        {/* Pie (left) + Configurator (right), centered */}
+        <div className="mx-auto w-full max-w-[1300px] flex flex-row flex-nowrap items-start justify-center gap-8 pt-[20px]">
+          {/* keep pie’s size; prevent shrinking */}
+          <div className="flex-1 min-w-[400px] max-w-[600px]">
+            <PortfolioPie symbols={selectedStocks} weights={portfolioWeights} />
           </div>
-          {/* AvgPerformance - 50% width 
-          <div className="w-1/2">
-            <AvgPerformance />
-          </div>*/}
-        </div>
-        {/* AvgPerformance - 50% width */}
-          <div className="w-1/2  items-center mx-auto" >
+
+          {/* configurator column */}
+          <div className="w-[520px] ">
             <PortfolioConfigurator onUpdate={handlePortfolioUpdate} />
           </div>
+        </div>
+
+        
       </div>
     </div>
   )
