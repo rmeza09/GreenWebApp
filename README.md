@@ -2,7 +2,8 @@
 Through this project my objective was to learn how to build out a backend database for communicating with the Alpaca API. Alpaca is a service which serves finnancial data including asset prices for equities and crypto on a variety of timescales. In this project I learned to use Flask as the backend framework and React with Typescript and Tailwind CSS for the frontend tech stack.
 
 ### 🔗 Live Site: [https://green-web-app.vercel.app/](https://green-web-app.vercel.app/)
-## THE SITE IS SLOW, be patient with the render backend I only have the free tier
+### THE SITE IS SLOW, be patient with the render backend I only have the free tier
+It can take 20-30 seconds for Render to process the fetch request and the back end winds down after 50 seconds of inactivity.
 
 ### Current Updates
 - The Render backend is up and running.
