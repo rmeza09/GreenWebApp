@@ -55,18 +55,19 @@ function App() {
         </div>
 
         {/* Pie (left) + Configurator (right), centered */}
-        <div className="mx-auto w-full max-w-[1300px] flex flex-row flex-nowrap items-start justify-center gap-8 pt-[20px]">
-          {/* keep pie’s size; prevent shrinking */}
-          <div className="flex-1 min-w-[400px] max-w-[600px]">
-            <PortfolioPie symbols={selectedStocks} weights={portfolioWeights} />
-          </div>
+        <div className="origin-top scale-[0.9]">
+          <div className="mx-auto w-full max-w-[1300px] flex flex-row flex-nowrap items-start justify-center gap-8 pt-[20px]">
+            {/* keep pie’s size; prevent shrinking */}
+            <div className="flex-1 min-w-[400px] max-w-[600px]">
+              <PortfolioPie symbols={selectedStocks} weights={portfolioWeights} />
+            </div>
 
-          {/* configurator column */}
-          <div className="w-[520px] ">
-            <PortfolioConfigurator onUpdate={handlePortfolioUpdate} />
+            {/* configurator column */}
+            <div className="w-[520px] ">
+              <PortfolioConfigurator onUpdate={handlePortfolioUpdate} />
+            </div>
           </div>
         </div>
-
         
       </div>
     </div>
